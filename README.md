@@ -1,4 +1,4 @@
-# Sistema de Biblioteca — Bootcamp Full Stack Python
+# Sistema de Biblioteca - Bootcamp Full Stack Python
 
 Proyecto Django completo con autenticación, permisos y grupos.
 
@@ -21,35 +21,98 @@ pip install psycopg2-binary
 # 4. Aplicar migraciones
 python manage.py migrate
 
-# 4.1 Poblar la bbdd
-python manage.py shell < poblar_db.py
+# 4.1 Poblar la bbdd con datos iniciales
+python manage.py poblar_inicial
 
 # 5. Crear superusuario
 python manage.py createsuperuser
 
 
-# 7. Iniciar el servidor
+# 6. Iniciar el servidor
 python manage.py runserver
 
-# 6. Crear grupos desde el admin
-# Entra a http://127.0.0.1:8000/admin/
-# Authentication → Groups → Add Group
-# Crear grupos: socio, bibliotecario
-# Asignar permisos:
-#   socio        → biblioteca | prestamo | Can add prestamo
-#   bibliotecario → biblioteca | prestamo | Can view prestamo (y todos los de biblioteca)
+```
 
+## Que hace cada comando de carga
+
+### 1. Datos iniciales del proyecto
+
+```bash
+python manage.py poblar_inicial
+```
+
+Este comando:
+
+- crea grupos y permisos
+- crea algunos generos
+- crea algunos autores
+- crea algunos libros
+
+Importante:
+
+- esto **no carga un archivo JSON**
+- esto **no usa `loaddata`**
+- esto sirve como poblado inicial rapido del proyecto
+- reemplaza el uso manual de `python manage.py shell < poblar_db.py`
+
+### 2. Respaldo del catalogo para alumnos
+
+```bash
+python manage.py exportar_catalogo
+```
+
+Este comando:
+
+- genera un archivo JSON
+- exporta solo el catalogo
+- no incluye usuarios
+- no incluye prestamos
+
+Archivo generado por defecto:
+
+```bash
+fixtures/catalogo_alumnos.json
+```
+
+### 3. Cargar el respaldo JSON
+
+```bash
+python manage.py loaddata fixtures/catalogo_alumnos.json
+```
+
+Este comando:
+
+- si carga el JSON
+- inserta autores, editoriales, generos, tags, libros y revistas
+- no crea usuarios ni prestamos
+
+## Flujo recomendado
+
+### Opcion A: poblar rapido con script Python
+
+```bash
+python manage.py migrate
+python manage.py poblar_inicial
+```
+
+### Opcion B: cargar el catalogo completo para alumnos
+
+```bash
+python manage.py migrate
+python manage.py loaddata fixtures/catalogo_alumnos.json
 ```
 
 ## URLs disponibles
 
 | URL | Descripción | Acceso |
 |-----|-------------|--------|
-| `/` | Catálogo de libros | Todos |
+| `/` | Catálogo | Todos |
 | `/libro/<id>/` | Detalle de libro | Todos |
-| `/libro/<id>/solicitar/` | Solicitar préstamo | Logueado |
+| `/libro/<id>/solicitar/` | Solicitar préstamo de libro | Logueado |
+| `/revista/<id>/` | Detalle de revista | Todos |
+| `/revista/<id>/solicitar/` | Solicitar préstamo de revista | Logueado |
 | `/mis-prestamos/` | Ver mis préstamos | Logueado |
-| `/prestamo/<id>/devolver/` | Devolver libro | Logueado (dueño) |
+| `/prestamo/<id>/devolver/` | Devolver préstamo | Logueado (dueño) |
 | `/panel/` | Panel bibliotecario | Grupo bibliotecario |
 | `/usuarios/registro/` | Registro de socio | Público |
 | `/usuarios/perfil/` | Mi perfil | Logueado |
@@ -59,11 +122,14 @@ python manage.py runserver
 
 ## Modelos
 
-- **CustomUser** (AbstractUser) → Socio con teléfono, dirección, fecha_nacimiento
-- **Genero** → Nombre del género literario
-- **Autor** → Nombre, apellido, nacionalidad
-- **Libro** → Título, autor, género, año, stock, descripción
-- **Prestamo** → Socio, libro, fecha_prestamo, fecha_devolucion, devuelto
+- **CustomUser** -> Socio con telefono, direccion, fecha_nacimiento
+- **Genero** -> Nombre del genero literario
+- **Autor** -> Nombre, apellido, nacionalidad
+- **Tag** -> Etiquetas para libros y revistas
+- **Editorial** -> Nombre, pais, anio de fundacion
+- **Libro** -> Titulo, autor, genero, anio, stock, descripcion, fecha de publicacion, paginas
+- **Revista** -> Titulo, editorial, numero de edicion, precio, fecha de publicacion, disponible, notas, paginas y tags
+- **Prestamo** -> Socio, libro o revista, fecha_prestamo, fecha_devolucion, devuelto
 
 ## Grupos y permisos
 
@@ -90,7 +156,7 @@ DATABASES = {
 }
 ```
 
-Luego instala el driver e instala:
+Luego instala el driver y aplica migraciones:
 ```bash
 pip install psycopg2-binary
 python manage.py migrate

@@ -1,6 +1,7 @@
 """
 Script para poblar la base de datos de la Biblioteca
-Ejecutar con: python manage.py shell < poblar_db.py
+Preferir: python manage.py poblar_inicial
+Compatibilidad antigua: python manage.py shell < poblar_db.py
 """
 from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
