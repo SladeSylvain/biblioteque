@@ -52,12 +52,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'biblioteca',
-        #'NAME': 'biblio2',
-        'USER': 'sonnex',
-        'PASSWORD': '08052018#Gb',
+        'NAME': 'nombre_base',
+        'USER': 'usuario_base',
+        'PASSWORD': 'pass_base',
         'HOST': 'localhost',
-        'PORT': '5454',
+        'PORT': '5432',
     }
 }
 
