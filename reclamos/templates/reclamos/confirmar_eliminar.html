@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Confirmar Eliminación{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h4>¿Está seguro de que desea eliminar este reclamo?</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><strong>Título:</strong> {{ reclamo.titulo }}</h5>
+            <p class="card-text"><strong>Descripción:</strong> {{ reclamo.descripcion }}</p>
+            
+            <hr>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+                
+                <a href="{% url 'reclamos:lista' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

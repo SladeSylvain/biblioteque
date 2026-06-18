@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'usuarios',
     'biblioteca',
+    'reclamos',
 ]
 
 MIDDLEWARE = [
@@ -52,9 +53,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'nombre_base',
-        'USER': 'usuario_base',
-        'PASSWORD': 'pass_base',
+        'NAME': 'postgres',
+        #'NAME': 'biblio2',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }

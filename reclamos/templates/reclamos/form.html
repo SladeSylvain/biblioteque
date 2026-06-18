@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>
+    {% if reclamo %}Editar reclamo{% else %}Nuevo reclamo o sugerencia{% endif%}
+</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+    <label class="form-label">Tipo</label>
+    <select name="tipo" class="form-select">
+        <option value="reclamo" {% if reclamo.tipo == 'reclamo' %}selected{% endif %}>Reclamo</option>
+        <option value="sugerencia" {% if reclamo.tipo == 'sugerencia' %}selected{% endif %}>Sugerencia</option>
+    </select>
+</div>
+    <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input type="text" name="titulo" class="form-control"
+            value="{% if reclamo %}{{ reclamo.titulo }}{% endif %}"
+            maxlength="150" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea name="descripcion" class="form-control" rows="5"
+            maxlength="1000"
+            required>{% if reclamo %}{{ reclamo.descripcion }}{% endif %}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'reclamos:lista' %}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

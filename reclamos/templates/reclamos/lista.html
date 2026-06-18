@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Reclamos y Sugerencias{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mis Reclamos y Sugerencias</h2>
+
+    <a href="{% url 'reclamos:crear' %}" class="btn btn-primary">+ Nuevo
+        reclamo</a>
+</div>
+
+<div class="row">
+    {% for reclamo in reclamos %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5>{{ reclamo.titulo }}</h5>
+                <span class="badge bg-secondary">
+                    {{ reclamo.get_tipo_display }}
+                </span>
+                    <a href="{% url 'reclamos:detalle' reclamo.id %}">
+                        Ver detalle
+                    </a>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+
+    <p>Todavía no tienes reclamos.</p>
+
+    {% endfor %}
+
+</div>
+{% endblock %}

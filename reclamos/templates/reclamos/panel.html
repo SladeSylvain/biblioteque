@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Reclamos{% endblock %}
+
+{% block content %}
+<h2>Panel de Reclamos y Sugerencias</h2>
+<p class="text-muted">Vista para bibliotecarios — gestiona el estado de todos los reclamos del sistema.</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Usuario</th>
+            <th>Tipo</th>
+            <th>Título</th>
+            <th>Estado actual</th>
+            <th>Cambiar estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!--
+            TODO (Ejercicio 2 / Clase 3): recorre TODOS los reclamos
+            (no solo los del usuario actual — esto es vista de admin)
+            y por cada uno muestra una fila con un formulario pequeño
+            que permita cambiar el campo 'estado'.
+
+            Estructura sugerida por fila:
+
+            {% for reclamo in NOMBRE_DE_TU_VARIABLE %}
+            <tr>
+                <td>{{ reclamo.usuario.username }}</td>
+                <td>{{ reclamo.get_tipo_display }}</td>
+                <td>{{ reclamo.titulo }}</td>
+                <td>{{ reclamo.get_estado_display }}</td>
+                <td>
+                    <form method="post" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="reclamo_id" value="{{ reclamo.id }}">
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="pendiente" {% if reclamo.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                            <option value="en_revision" {% if reclamo.estado == 'en_revision' %}selected{% endif %}>En revisión</option>
+                            <option value="resuelto" {% if reclamo.estado == 'resuelto' %}selected{% endif %}>Resuelto</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        -->
+    </tbody>
+</table>
+{% endblock %}
