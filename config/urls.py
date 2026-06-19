@@ -8,6 +8,5 @@ urlpatterns = [
     path('usuarios/', include('usuarios.urls')),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    # Esta línea ya incluye todas las rutas de la app 'reclamos'
     path('reclamos/', include('reclamos.urls')), 
 ]

@@ -1,59 +1,42 @@
 {% extends 'base.html' %}
 
-{% block title %}Detalle del Reclamo{% endblock %}
+{% block title %}Panel de Reclamos{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            
-            <div class="card shadow-sm border-0">
-                
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3">
-                    <h4 class="mb-0 fw-bold">{{ reclamo.titulo }}</h4>
-                    <div>
-                        <span class="badge bg-secondary p-2 text-uppercase small">{{ reclamo.get_tipo_display }}</span>
-                        <span class="badge bg-info text-dark p-2 text-uppercase small">{{ reclamo.get_estado_display }}</span>
-                    </div>
-                </div>
-
-                <div class="card-body bg-white p-4">
-                    <h6 class="text-muted text-uppercase fw-bold small mb-2">Descripción del Reclamo</h6>
-                    <p class="card-text text-secondary fs-5 lh-base mb-4">
-                        {{ reclamo.descripcion }}
-                    </p>
-                    
-                    <hr class="text-muted my-4">
-
-                    <div class="row text-muted small">
-                        <div class="col-sm-6 mb-2 mb-sm-0">
-                            <i class="bi bi-calendar-plus me-1"></i>
-                            <strong>Creado el:</strong> {{ reclamo.fecha_creacion|date:"d/m/Y H:i" }}
-                        </div>
-                        <div class="col-sm-6">
-                            <i class="bi bi-calendar-check me-1"></i>
-                            <strong>Última actualización:</strong> {{ reclamo.fecha_actualizacion|date:"d/m/Y H:i" }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card-footer bg-light d-flex justify-content-between align-items-center py-3">
-                    <a href="/reclamos/" class="btn btn-link text-decoration-none text-muted p-0">
-                        <i class="bi bi-arrow-left-short fs-5 align-middle"></i> Volver al listado
-                    </a>
-
-                    <div class="d-flex gap-2">
-                        <a href="/reclamos/reclamo/{{ reclamo.id }}/editar/" class="btn btn-outline-primary d-flex align-items-center gap-1 px-3">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </a>
-
-                        <a href="/reclamos/reclamo/{{ reclamo.id }}/eliminar/" class="btn btn-danger d-flex align-items-center gap-1 px-3">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </a>
-                    </div>
-                </div>
-
-            </div> </div>
-    </div>
+    <h2>Panel de Administración de Reclamos</h2>
+    <table class="table table-hover mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Título</th>
+                <th>Estado Actual</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reclamo in reclamos %}
+            <tr>
+                <td>{{ reclamo.id }}</td>
+                <td>{{ reclamo.usuario.username }}</td>
+                <td>{{ reclamo.titulo }}</td>
+                <td>{{ reclamo.get_estado_display }}</td>
+                <td>
+                    <form method="POST" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="reclamo_id" value="{{ reclamo.id }}">
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en_proceso">En Proceso</option>
+                            <option value="resuelto">Resuelto</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

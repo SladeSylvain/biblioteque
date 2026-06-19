@@ -10,4 +10,6 @@ urlpatterns = [
     path('mis-prestamos/', views.mis_prestamos, name='mis_prestamos'),
     path('prestamo/<int:pk>/devolver/', views.devolver_libro, name='devolver_libro'),
     path('panel/', views.panel_bibliotecario, name='panel_bibliotecario'),
+    path('editar/<int:reclamo_id>/', views.editar_reclamo, name='editar_reclamo'),
+    path('eliminar/<int:reclamo_id>/', views.eliminar_reclamo, name='eliminar_reclamo')
 ]
