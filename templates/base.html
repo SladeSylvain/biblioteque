@@ -22,23 +22,6 @@
         </button>
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav me-auto">
-    <li class="nav-item">
-        <a class="nav-link" href="/">Libros</a>
-    </li>
-    {% if user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'mis_prestamos' %}">Mis Préstamos</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-info" href="{% url 'crear_reclamo' %}">🚩 Reportar Problema</a>
-    </li>
-    {% if perms.biblioteca.view_prestamo %}
-    <li class="nav-item">
-        <a class="nav-link text-warning" href="{% url 'panel_bibliotecario' %}">Panel Bibliotecario</a>
-    </li>
-    {% endif %}
-    {% endif %}
-            </ul><ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Libros</a>
                 </li>
@@ -47,15 +30,22 @@
                     <a class="nav-link" href="{% url 'mis_prestamos' %}">Mis Préstamos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-info" href="{% url 'crear_reclamo' %}">🚩 Reportar Problema</a>
+                    <a class="nav-link text-info" href="{% url 'reclamos:lista' %}">Mis Reclamos</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link text-info" href="{% url 'reclamos:crear' %}">🚩 Reportar Problema</a>
+                </li>
+                {% if perms.reclamos.change_reclamo %}
+                <li class="nav-item">
+                    <a class="nav-link text-warning" href="{% url 'reclamos:panel' %}">Panel de Reclamos</a>
+                </li>
+                {% endif %}
                 {% if perms.biblioteca.view_prestamo %}
                 <li class="nav-item">
                     <a class="nav-link text-warning" href="{% url 'panel_bibliotecario' %}">Panel Bibliotecario</a>
                 </li>
                 {% endif %}
                 {% endif %}
-            </ul>
             </ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}

@@ -40,7 +40,7 @@ urlpatterns = [
     # Sugerencia de path: 'reclamo/<int:id>/editar/'
     # Sugerencia de name: 'editar'
     #
-    # path('reclamo/<int:id>/editar/', views.editar_reclamo, name='editar'),
+    path('reclamo/<int:id>/editar/', views.editar_reclamo, name='editar'),
 
 
     # ============================================================
@@ -59,5 +59,5 @@ urlpatterns = [
     # Sugerencia de path: 'panel/'
     # Sugerencia de name: 'panel'
     #
-    # path('panel/', views.panel_reclamos, name='panel'),
+    path('panel/', views.panel_reclamos, name='panel'),
 ]

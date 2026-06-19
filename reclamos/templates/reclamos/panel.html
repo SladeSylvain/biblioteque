@@ -1,42 +1,59 @@
-<p>Cantidad de reclamos encontrados: {{ reclamos|length }}</p>
+{% extends 'base.html' %}
 
-<table class="table table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Descripción</th>
-            <th>Estado Actual</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for reclamo in reclamos %}
-        <tr>
-            <td>{{ reclamo.id }}</td>
-            <td>{{ reclamo.usuario.username }}</td>
-            <td>{{ reclamo.descripcion }}</td>
-            <td>{{ reclamo.get_estado_display }}</td>
-            <td>{{ reclamo.usuario }}</td> 
-            <td>{{ reclamo.user }}</td>
-            <td>
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="reclamo_id" value="{{ reclamo.id }}">
-                    <select name="estado" class="form-select form-select-sm">
-                        <option value="pendiente" {% if reclamo.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
-                        <option value="en_proceso" {% if reclamo.estado == 'en_proceso' %}selected{% endif %}>En Proceso</option>
-                        <option value="resuelto" {% if reclamo.estado == 'resuelto' %}selected{% endif %}>Resuelto</option>
+{% block title %}Panel de Reclamos{% endblock %}
 
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-primary mt-1">Actualizar</button>
-                </form>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" class="text-center">No hay reclamos en el sistema.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<div class="container mt-4">
+    <h2>Panel de Reclamos y Sugerencias</h2>
+    <p class="text-muted">Vista para bibliotecarios — gestiona el estado de todos los reclamos del sistema.</p>
+    <p>Cantidad de reclamos encontrados: {{ reclamos|length }}</p>
+
+    <table class="table table-hover table-bordered mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Tipo</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Estado Actual</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reclamo in reclamos %}
+            <tr>
+                <td>{{ reclamo.id }}</td>
+                <td>
+                    {{ reclamo.usuario.get_full_name|default:reclamo.usuario.username }} ({{ reclamo.usuario.username }})
+                </td>
+                <td>
+                    <span class="badge bg-secondary">{{ reclamo.get_tipo_display }}</span>
+                </td>
+                <td>{{ reclamo.titulo }}</td>
+                <td>{{ reclamo.descripcion }}</td>
+                <td>
+                    <span class="badge bg-info text-dark">{{ reclamo.get_estado_display }}</span>
+                </td>
+                <td>
+                    <form method="POST" class="d-flex gap-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="reclamo_id" value="{{ reclamo.id }}">
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="pendiente" {% if reclamo.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                            <option value="en_revision" {% if reclamo.estado == 'en_revision' %}selected{% endif %}>En revisión</option>
+                            <option value="resuelto" {% if reclamo.estado == 'resuelto' %}selected{% endif %}>Resuelto</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary">Actualizar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay reclamos en el sistema.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -77,9 +77,9 @@ def crear_reclamo(request):
    return render(request, 'reclamos/form.html')
 
 @login_required
-def editar_reclamo(request, reclamo_id):
+def editar_reclamo(request, id):
     # Paso 5 (Seguridad): Buscamos el reclamo asegurando que pertenezca al usuario logueado
-    reclamo = get_object_or_404(Reclamo, id=reclamo_id, usuario=request.user)
+    reclamo = get_object_or_404(Reclamo, id=id, usuario=request.user)
     
     if request.method == 'POST':
         # Instanciamos el formulario con los datos enviados y el reclamo actual a modificar
@@ -87,7 +87,7 @@ def editar_reclamo(request, reclamo_id):
         if form.is_valid():
             form.save()
             # Redirigimos al detalle del reclamo ya modificado
-            return redirect('detalle_reclamo', reclamo_id=reclamo.id)
+            return redirect('reclamos:detalle', id=reclamo.id)
     else:
         # GET: Pre-cargamos el formulario con los datos actuales del reclamo
         form = ReclamoForm(instance=reclamo)
@@ -103,8 +103,10 @@ def editar_reclamo(request, reclamo_id):
 # CLASE 3 — DELETE + PANEL BIBLIOTECARIO
 # ============================================================
 
+@login_required
 def eliminar_reclamo(request, id):
-    reclamo = get_object_or_404(Reclamo, id=id)
+    # Seguridad: Buscamos el reclamo asegurando que pertenezca al usuario logueado
+    reclamo = get_object_or_404(Reclamo, id=id, usuario=request.user)
 
     if request.method == 'POST':
         reclamo.delete()
@@ -118,20 +120,13 @@ def eliminar_reclamo(request, id):
 @login_required
 @permission_required('reclamos.change_reclamo', raise_exception=True)
 def panel_reclamos(request):
-    """
-    Panel para el bibliotecario: ve TODOS los reclamos de TODOS los
-    usuarios y puede cambiar su estado (pendiente / en_revision / resuelto).
+    if request.method == 'POST':
+        reclamo_id = request.POST.get('reclamo_id')
+        nuevo_estado = request.POST.get('estado')
+        reclamo = get_object_or_404(Reclamo, id=reclamo_id)
+        reclamo.estado = nuevo_estado
+        reclamo.save()
+        return redirect('reclamos:panel')
 
-    Pasos esperados:
-    1. Obtener todos los reclamos con Reclamo.objects.all()
-       (acá SÍ se ven todos, no solo los del usuario actual)
-    2. Si request.method == 'POST':
-       - Leer el id del reclamo y el nuevo estado desde request.POST
-       - Buscar ese reclamo, actualizar su 'estado', guardar
-       - Redirigir de nuevo al panel
-    3. Renderizar 'reclamos/panel.html' con todos los reclamos
-
-    Pista: este es el único rol que puede cambiar 'estado'. Por eso
-    lleva @permission_required además de @login_required.
-    """
-    pass
+    reclamos = Reclamo.objects.select_related('usuario').all()
+    return render(request, 'reclamos/panel.html', {'reclamos': reclamos})

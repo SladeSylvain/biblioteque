@@ -5,4 +5,4 @@ from .models import Reclamo
 class ReclamoForm(forms.ModelForm): # <--- Este nombre debe coincidir
     class Meta:
         model = Reclamo
-        fields = ['titulo', 'descripcion'] # O los campos que tengas
+        fields = ['tipo', 'titulo', 'descripcion']
