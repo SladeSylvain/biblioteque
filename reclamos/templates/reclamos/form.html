@@ -5,31 +5,35 @@
     {% if reclamo %}Editar reclamo{% else %}Nuevo reclamo o sugerencia{% endif%}
 </h2>
 
-<form method="post">
+<form method="post" class="mt-4">
     {% csrf_token %}
 
+    <div class="mb-4">
+        <label class="form-label d-block fw-bold mb-2">Tipo de Solicitud</label>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo" id="tipo_reclamo" value="reclamo" {% if not reclamo or reclamo.tipo == 'reclamo' %}checked{% endif %}>
+            <label class="form-check-label" for="tipo_reclamo">Reclamo</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="tipo" id="tipo_sugerencia" value="sugerencia" {% if reclamo.tipo == 'sugerencia' %}checked{% endif %}>
+            <label class="form-check-label" for="tipo_sugerencia">Sugerencia</label>
+        </div>
+    </div>
+
     <div class="mb-3">
-    <label class="form-label">Tipo</label>
-    <select name="tipo" class="form-select">
-        <option value="reclamo" {% if reclamo.tipo == 'reclamo' %}selected{% endif %}>Reclamo</option>
-        <option value="sugerencia" {% if reclamo.tipo == 'sugerencia' %}selected{% endif %}>Sugerencia</option>
-    </select>
-</div>
-    <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input type="text" name="titulo" class="form-control"
+        <label class="form-label fw-bold" for="id_titulo">Título</label>
+        <input type="text" name="titulo" id="id_titulo" class="form-control"
             value="{% if reclamo %}{{ reclamo.titulo }}{% endif %}"
-            maxlength="150" required>
+            maxlength="150" required placeholder="Escribe un título descriptivo">
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea name="descripcion" class="form-control" rows="5"
-            maxlength="1000"
-            required>{% if reclamo %}{{ reclamo.descripcion }}{% endif %}</textarea>
+        <label class="form-label fw-bold" for="id_descripcion">Descripción</label>
+        <textarea name="descripcion" id="id_descripcion" class="form-control" rows="5"
+            maxlength="1000" required placeholder="Describe detalladamente el problema o sugerencia...">{% if reclamo %}{{ reclamo.descripcion }}{% endif %}</textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{% url 'reclamos:lista' %}" class="btn btn-link">Cancelar</a>
+    <button type="submit" class="btn btn-primary px-4">Guardar</button>
+    <a href="{% url 'reclamos:lista' %}" class="btn btn-link text-decoration-none">Cancelar</a>
 </form>
 {% endblock %}
